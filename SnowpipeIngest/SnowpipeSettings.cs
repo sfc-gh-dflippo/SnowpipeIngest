@@ -5,6 +5,9 @@ namespace SnowpipeIngest
 {
     public class SnowpipeSettings
     {
+        // Name and location of JSON configuration file
+        public static string SettingsFileLocation { get; set; } = "SnowpipeSettings.json";
+
         // Number of records buffered before ingesting to Snowflake.
         // The default value is 1,000,000 records.
         public double BufferCountRecords { get; set; } = 1000000;
@@ -36,9 +39,9 @@ namespace SnowpipeIngest
 
         public static SnowpipeSettings ReadSnowpipeSettings()
         {
-            string jsonText = File.ReadAllText("SnowpipeSettings.json");
+            string jsonText = File.ReadAllText(SettingsFileLocation);
             if (jsonText == null)
-                throw new Exception("Could not read SnowpipeSettings.json");
+                throw new Exception($"Could not read {SettingsFileLocation}");
 
             SnowpipeSettings? settings = JsonSerializer.Deserialize<SnowpipeSettings>(json: jsonText);
             if (settings == null)
@@ -51,7 +54,7 @@ namespace SnowpipeIngest
         {
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonString = JsonSerializer.Serialize(this, options);
-            File.WriteAllText("SnowpipeConfig.json", jsonString);
+            File.WriteAllText(SettingsFileLocation, jsonString);
         }
     }
 }
