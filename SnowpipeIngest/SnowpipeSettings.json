@@ -1,0 +1,10 @@
+﻿{
+  "Account": "*****",
+  "User": "*****",
+  "PrivateKeyFilename": "/Users/*****/.ssh/rsa_key.p8",
+  "PrivateKeyPassphrase": "*****",
+  "DatabaseName": "*****",
+  "SchemaName": "*****",
+  "PipeName": "JSON_STAGE_PIPE",
+  "StageName": "JSON_STAGE"
+}
