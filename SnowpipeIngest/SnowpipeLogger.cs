@@ -142,7 +142,8 @@ namespace SnowpipeIngest
         {
             using (IDbConnection conn = new SnowflakeDbConnection())
             {
-                conn.ConnectionString = String.Format("account={0};authenticator={1};user={2};private_key_file={3};private_key_pwd={4};db={5};schema={6}",
+                conn.ConnectionString = String.Format(
+                    "account={0};authenticator={1};user={2};private_key_file={3};private_key_pwd={4};db={5};schema={6}",
                     settings.Account, "snowflake_jwt", settings.User, settings.PrivateKeyFilename, settings.PrivateKeyPassphrase, settings.DatabaseName, settings.SchemaName);
 
                 conn.Open();
@@ -180,12 +181,15 @@ namespace SnowpipeIngest
                 }
             });
             string requestId = Guid.NewGuid().ToString();
-            Uri snowpipeUri = new Uri($"https://{settings.Account}.snowflakecomputing.com/v1/data/pipes/{settings.DatabaseName}.{settings.SchemaName}.{settings.PipeName}/insertFiles?requestId={requestId}");
+            Uri snowpipeUri = new Uri(String.Format(
+                "https://{0}.snowflakecomputing.com/v1/data/pipes/{1}.{2}.{3}/insertFiles?requestId={4}",
+                settings.Account, settings.DatabaseName, settings.SchemaName, settings.PipeName, requestId));
 
             StringContent httpContent = new(jsonString, Encoding.UTF8, new MediaTypeHeaderValue("application/json"));
 
             // Create an authorization token from our private key
-            string jwtToken = SnowflakeJWT.GenerateSnowflakeJwtToken(settings.Account, settings.User, settings.PrivateKeyFilename, settings.PrivateKeyPassphrase);
+            string jwtToken = SnowflakeJWT.GenerateSnowflakeJwtToken(
+                settings.Account, settings.User, settings.PrivateKeyFilename, settings.PrivateKeyPassphrase);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
 
             // Call the API
