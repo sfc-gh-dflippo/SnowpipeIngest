@@ -11,7 +11,7 @@ namespace SnowpipeIngest
 
     public class SnowpipeLogger
     {
-        private static SnowpipeSettings settings = SnowpipeSettings.ReadSnowpipeSettings();
+        public static SnowpipeSettings settings { get; set; } = SnowpipeSettings.ReadSnowpipeSettings();
         private static StreamWriter? _currentWriter;
         private static DateTime? _memoryBufferExpiration;
         private static DateTime? _diskBufferExpiration;
